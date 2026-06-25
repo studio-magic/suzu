@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>占い型コンサルティング ｜ Suzu</title>
+<meta name="description" content="現実を変える答えは、未来ではなく“今のあなた”の中にある。カードとアクセスバーズで本質を見抜き、未来を創る占い型コンサルティング。">
+<style>
+  :root{
+    --gold:#d8b878;
+    --gold-1:#e7cd8f;
+    --gold-2:#c9a45a;
+    --bg:#080604;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:#f3ead7;
+    font-family:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* ===== 背景：ミステリアスな霧と光のゆらめき ===== */
+  .ambient{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(201,164,90,.10), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(201,164,90,.08), transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(60,40,20,.25), transparent 70%);
+    animation:mist 16s ease-in-out infinite alternate;
+  }
+  @keyframes mist{
+    0%{opacity:.6;transform:scale(1);}
+    100%{opacity:1;transform:scale(1.15);}
+  }
+  /* 周辺減光（ヴィネット）で奥行きを */
+  .vignette{
+    position:fixed;inset:0;z-index:3;pointer-events:none;
+    box-shadow:inset 0 0 220px 60px rgba(0,0,0,.85);
+  }
+
+  /* ===== 舞い上がる金色の粒子 ===== */
+  .particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
+  .p{
+    position:absolute;bottom:-20px;
+    width:6px;height:6px;border-radius:50%;
+    background:radial-gradient(circle,rgba(231,205,143,.9),rgba(201,164,90,0));
+    filter:blur(.5px);
+    animation:rise linear infinite;
+    opacity:0;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0) scale(.6);opacity:0;}
+    10%{opacity:.9;}
+    90%{opacity:.6;}
+    100%{transform:translateY(-105vh) translateX(40px) scale(1.1);opacity:0;}
+  }
+
+  /* ===== コンテナ（縦長LP） ===== */
+  .lp{
+    position:relative;z-index:2;
+    max-width:480px;
+    margin:0 auto;
+    box-shadow:0 0 120px rgba(0,0,0,.9);
+  }
+
+  /* ===== 各画像セクション ===== */
+  .frame{
+    position:relative;
+    display:block;
+    line-height:0;
+    opacity:0;
+    transform:translateY(48px);
+    filter:blur(6px);
+    transition:opacity 1.3s ease, transform 1.3s ease, filter 1.3s ease;
+  }
+  .frame.in{
+    opacity:1;
+    transform:translateY(0);
+    filter:blur(0);
+  }
+  .frame img{
+    width:100%;
+    height:auto;
+    display:block;
+  }
+
+  /* ===== ボタンのリンク領域（画像上に重ねる） ===== */
+  .btn-link{
+    position:absolute;
+    display:block;
+    border-radius:60px;
+    z-index:5;
+    -webkit-tap-highlight-color:transparent;
+    cursor:pointer;
+  }
+  /* 1枚目：まずは相談してみる */
+  .btn1{ left:15.8%; top:89.4%; width:68.2%; height:6.3%; }
+  /* 11枚目：相談を申し込む */
+  .btn11{ left:9%; top:62.8%; width:82%; height:11%; }
+
+  /* ボタンを誘う：金色の光のゆらめき＋光のスイープ */
+  .btn-link::before{
+    content:"";
+    position:absolute;inset:-1px;
+    border-radius:inherit;
+    box-shadow:0 0 0 0 rgba(231,205,143,.55);
+    animation:pulse 2.6s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 6px 1px rgba(231,205,143,.0), 0 0 18px 4px rgba(231,205,143,.0);}
+    50%{box-shadow:0 0 16px 3px rgba(231,205,143,.45), 0 0 40px 10px rgba(201,164,90,.22);}
+    100%{box-shadow:0 0 6px 1px rgba(231,205,143,.0), 0 0 18px 4px rgba(231,205,143,.0);}
+  }
+  .btn-link::after{
+    content:"";
+    position:absolute;inset:0;
+    border-radius:inherit;
+    overflow:hidden;
+    background:linear-gradient(110deg,
+        transparent 30%, rgba(255,248,224,.55) 48%, rgba(255,248,224,.0) 60%);
+    background-size:250% 100%;
+    background-position:-120% 0;
+    animation:sheen 3.4s ease-in-out infinite;
+    mix-blend-mode:screen;
+  }
+  @keyframes sheen{
+    0%{background-position:-120% 0;}
+    55%{background-position:220% 0;}
+    100%{background-position:220% 0;}
+  }
+  .btn-link:active{ transform:scale(.985); }
+
+  /* スクロールを促す小さなヒント */
+  .scroll-hint{
+    position:fixed;left:50%;bottom:18px;z-index:6;
+    transform:translateX(-50%);
+    color:rgba(231,205,143,.85);
+    font-size:11px;letter-spacing:.25em;
+    text-align:center;
+    pointer-events:none;
+    transition:opacity .6s ease;
+  }
+  .scroll-hint .chev{display:block;margin:6px auto 0;width:10px;height:10px;
+    border-right:1px solid rgba(231,205,143,.85);
+    border-bottom:1px solid rgba(231,205,143,.85);
+    transform:rotate(45deg);
+    animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.4;}50%{transform:rotate(45deg) translate(3px,3px);opacity:1;}}
+
+  /* フッター */
+  .foot{
+    position:relative;z-index:2;
+    max-width:480px;margin:0 auto;
+    text-align:center;
+    padding:26px 16px 40px;
+    font-size:11px;letter-spacing:.18em;
+    color:rgba(231,205,143,.5);
+    font-family:"Hiragino Mincho ProN",serif;
+  }
+</style>
+</head>
+<body>
+
+  <div class="ambient"></div>
+  <div class="particles" id="particles"></div>
+
+  <main class="lp">
+    <!-- 1 : ファーストビュー（ボタン：まずは相談してみる → Instagram） -->
+    <section class="frame">
+      <img src="1.png" alt="占い型コンサルティング ― 現実を変える答えは、未来ではなく“今のあなた”の中にある。">
+      <a class="btn-link btn1" href="https://www.instagram.com/risetta.ry" target="_blank" rel="noopener" aria-label="まずは相談してみる"></a>
+    </section>
+
+    <!-- 2 : こんなお悩みありませんか？ -->
+    <section class="frame"><img src="2.png" alt="こんなお悩みありませんか？ そんな悩みには“原因”があります。"></section>
+
+    <!-- 3 : なぜ変われないのか -->
+    <section class="frame"><img src="3.png" alt="なぜ変われないのか ― 思考のクセ・無意識・本音が見えていないから。"></section>
+
+    <!-- 4 : 占うことが目的ではありません -->
+    <section class="frame"><img src="4.png" alt="占うことが目的ではありません。現実でどう動くかまで一緒に考えます。"></section>
+
+    <!-- 5 : Suzuだからできる理由 -->
+    <section class="frame"><img src="5.png" alt="Suzuだからできる理由 ― 現場も数字も人の気持ちも分かる。"></section>
+
+    <!-- 6 : サービス内容 -->
+    <section class="frame"><img src="6.png" alt="サービス内容 ― カード・アクセスバーズ・思考整理・人生設計・行動プラン・継続コンサル。"></section>
+
+    <!-- 7 : 得られる未来 -->
+    <section class="frame"><img src="7.png" alt="このコンサルで得られる未来 ― 未来は自分で選べるものになります。"></section>
+
+    <!-- 8 : お客様の変化 -->
+    <section class="frame"><img src="8.png" alt="お客様の変化 ― あなたも、理想の未来を現実にしませんか？"></section>
+
+    <!-- 9 : 料金（LINE相談付き｜リンクなし） -->
+    <section class="frame"><img src="9.png" alt="料金 ― 占い型コンサル 3回コース 33,000円（税込）。LINE相談付き。"></section>
+
+    <!-- 10 : ご相談の流れ -->
+    <section class="frame"><img src="10.png" alt="ご相談の流れ ― 申し込み・日程調整・カードまたはアクセスバーズ・コンサル開始・3回で行動までサポート。"></section>
+
+    <!-- 11 : クロージング（ボタン：相談を申し込む → Instagram） -->
+    <section class="frame">
+      <img src="11.png" alt="未来を変えるのは“占い”ではなく今日の一歩です。">
+      <a class="btn-link btn11" href="https://www.instagram.com/risetta.ry" target="_blank" rel="noopener" aria-label="相談を申し込む"></a>
+    </section>
+  </main>
+
+  <div class="vignette"></div>
+
+  <div class="scroll-hint" id="hint">SCROLL<span class="chev"></span></div>
+
+  <footer class="foot">Fortune Consulting ｜ Suzu</footer>
+
+<script>
+  /* ===== スクロールで浮かび上がる演出 ===== */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.frame').forEach(el=>io.observe(el));
+
+  /* ===== 金色の粒子を生成 ===== */
+  const pc = document.getElementById('particles');
+  const N = 26;
+  for(let i=0;i<N;i++){
+    const p=document.createElement('span');
+    p.className='p';
+    const size=2+Math.random()*5;
+    p.style.left=Math.random()*100+'vw';
+    p.style.width=p.style.height=size+'px';
+    p.style.animationDuration=(9+Math.random()*12)+'s';
+    p.style.animationDelay=(-Math.random()*16)+'s';
+    p.style.opacity=String(.3+Math.random()*.5);
+    pc.appendChild(p);
+  }
+
+  /* ===== 下までスクロールしたらヒントを隠す ===== */
+  const hint=document.getElementById('hint');
+  window.addEventListener('scroll',()=>{
+    const nearBottom = window.innerHeight+window.scrollY > document.body.offsetHeight-120;
+    hint.style.opacity = nearBottom ? '0' : '.85';
+  },{passive:true});
+</script>
+</body>
+</html>
